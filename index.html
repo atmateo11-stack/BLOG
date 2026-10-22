@@ -22,9 +22,9 @@
 
         header {
             background-color: #13141f;
-            padding: 18px 40px;
+            padding: 14px 20px;
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
             border-bottom: 1px solid #222538;
         }
@@ -33,6 +33,7 @@
             font-size: 18px;
             font-weight: 700;
             color: #ffffff;
+            text-align: center;
         }
 
         main {
@@ -40,16 +41,27 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 40px 20px;
+            padding: 20px 15px;
         }
 
         .auth-card {
             background-color: #141522;
-            padding: 36px;
+            padding: 28px 20px;
             border-radius: 10px;
             border: 1px solid #22253b;
             width: 100%;
             max-width: 400px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        @media (min-width: 480px) {
+            .auth-card {
+                padding: 36px;
+            }
+            header {
+                padding: 18px 40px;
+                justify-content: flex-start;
+            }
         }
 
         .auth-card h2 {
@@ -79,7 +91,7 @@
             justify-content: center;
             gap: 10px;
             width: 100%;
-            padding: 10px;
+            padding: 12px 10px;
             background-color: #1e2133;
             border: 1px solid #2d324d;
             border-radius: 6px;
@@ -132,7 +144,7 @@
 
         .input-group input {
             width: 100%;
-            padding: 10px 12px;
+            padding: 12px;
             background-color: #0b0c13;
             border: 1px solid #22253b;
             border-radius: 6px;
@@ -147,7 +159,7 @@
 
         .btn-submit {
             width: 100%;
-            padding: 11px;
+            padding: 12px;
             background-color: #4f46e5;
             color: #ffffff;
             border: none;
@@ -203,10 +215,10 @@
 
         footer {
             text-align: center;
-            padding: 20px;
+            padding: 15px;
             background-color: #13141f;
             color: #63697b;
-            font-size: 13px;
+            font-size: 12px;
             border-top: 1px solid #222538;
         }
     </style>
@@ -220,7 +232,6 @@
     <main>
         <div class="auth-card">
             
-            <!-- INICIAR SESIÓN -->
             <div id="loginSection">
                 <h2>Iniciar Sesión</h2>
                 <p class="subtitle">Accede a tu cuenta para continuar</p>
@@ -261,7 +272,6 @@
                 </div>
             </div>
 
-            <!-- CREAR CUENTA -->
             <div id="registerSection" class="hidden">
                 <h2>Crear Cuenta</h2>
                 <p class="subtitle">Únete a GamerBlogsVerse</p>
@@ -324,12 +334,12 @@
                 const nombreUsuario = usuariosDB[email];
                 localStorage.setItem('usuarioActivoNombre', nombreUsuario);
                 
-                mostrarMensaje(`¡Bienvenido de nuevo, ${nombreUsuario}! Entrando...`, false);
+                mostrarMensaje(`¡Bienvenido, ${nombreUsuario}! Redirigiendo...`, false);
                 setTimeout(() => {
                     window.location.href = "dashboard.html";
                 }, 1000);
             } else {
-                mostrarMensaje("Esta cuenta no existe en el servidor. Crea una nueva en 'Crear cuenta'.", true);
+                mostrarMensaje("Esta cuenta no existe. Crea una en 'Crear cuenta'.", true);
             }
         }
 
@@ -339,13 +349,13 @@
             const email = document.getElementById('regEmail').value.toLowerCase();
 
             if (usuariosDB[email]) {
-                mostrarMensaje("Este correo ya tiene una cuenta registrada. Inicia sesión.", true);
+                mostrarMensaje("Este correo ya está registrado.", true);
             } else {
                 usuariosDB[email] = nombre;
                 localStorage.setItem('usuariosGamerVerse', JSON.stringify(usuariosDB));
                 localStorage.setItem('usuarioActivoNombre', nombre);
                 
-                mostrarMensaje(`¡Cuenta creada con éxito para ${nombre}! Ahora puedes iniciar sesión.`, false);
+                mostrarMensaje(`¡Cuenta creada para ${nombre}! Inicia sesión.`, false);
                 setTimeout(() => { cambiarVista('login'); }, 1500);
             }
         }
@@ -357,7 +367,6 @@
                 if (usuariosDB[cleanEmail]) {
                     const nombreUsuario = usuariosDB[cleanEmail];
                     localStorage.setItem('usuarioActivoNombre', nombreUsuario);
-                    
                     mostrarMensaje(`Acceso concedido. Redirigiendo...`, false);
                     setTimeout(() => { window.location.href = "dashboard.html"; }, 1000);
                 } else {
