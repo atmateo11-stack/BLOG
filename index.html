@@ -16,7 +16,10 @@
         }
 
         body {
-            background-color: #0b0c10;
+            /* Imagen de fondo con una capa oscura semitransparente para que resalte el login */
+            background: linear-gradient(rgba(11, 12, 16, 0.8), rgba(11, 12, 16, 0.8)), 
+                        url('fondo-gamer.jpg') no-repeat center center fixed;
+            background-size: cover;
             color: #c5c6c7;
             display: flex;
             justify-content: center;
@@ -26,13 +29,14 @@
         }
 
         .login-container {
-            background-color: #12141c;
+            background-color: rgba(18, 20, 28, 0.9); /* Ligeramente translúcido para apreciar el fondo */
+            backdrop-filter: blur(5px);
             border: 1px solid #1f2430;
             border-radius: 8px;
             padding: 30px;
             width: 100%;
             max-width: 400px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.8);
             text-align: center;
         }
 
@@ -140,14 +144,14 @@
     <div id="toastContainer"></div>
 
     <script>
-        // CONFIGURACIÓN DE FIREBASE (Usa tus credenciales oficiales)
+        // CONFIGURACIÓN DE FIREBASE
         const firebaseConfig = {
-            apiKey: "AIzaSyAn3OccYdLdKnaOU3MKCbxx0gw5oS1is7w",
-            authDomain: "gamerblogverse.firebaseapp.com",
-            projectId: "gamerblogverse",
-            storageBucket: "gamerblogverse.firebasestorage.app",
-            messagingSenderId: "407420759929",
-            appId: "1:407420759929:web:85554efffdd87f786c09a8"
+            apiKey: "TU_API_KEY",
+            authDomain: "tu-proyecto.firebaseapp.com",
+            projectId: "tu-proyecto",
+            storageBucket: "tu-proyecto.appspot.com",
+            messagingSenderId: "TU_SENDER_ID",
+            appId: "TU_APP_ID"
         };
 
         // Inicializar Firebase
