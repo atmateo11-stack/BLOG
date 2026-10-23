@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GamerBlogsVerse - Autenticación</title>
+    <title>GamerBlogsVerse - Iniciar Sesión</title>
+    <!-- Importar Firebase App y Auth SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <style>
         * {
             margin: 0;
@@ -13,366 +16,147 @@
         }
 
         body {
-            background-color: #0d0e15;
-            color: #e1e3ed;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-
-        header {
-            background-color: #13141f;
-            padding: 14px 20px;
+            background-color: #0b0c10;
+            color: #c5c6c7;
             display: flex;
             justify-content: center;
             align-items: center;
-            border-bottom: 1px solid #222538;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .login-container {
+            background-color: #12141c;
+            border: 1px solid #1f2430;
+            border-radius: 8px;
+            padding: 30px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+            text-align: center;
         }
 
         .logo {
-            font-size: 18px;
-            font-weight: 700;
-            color: #ffffff;
-            text-align: center;
+            font-size: 26px;
+            font-weight: 900;
+            color: #090a0f;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-style: italic;
+            -webkit-text-stroke: 1.5px #ff007f;
+            text-shadow: 
+                0 0 2px #ff007f,
+                0 0 8px #00f0ff,
+                0 0 16px #00f0ff;
+            margin-bottom: 10px;
+            user-select: none;
         }
 
-        main {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px 15px;
-        }
-
-        .auth-card {
-            background-color: #141522;
-            padding: 28px 20px;
-            border-radius: 10px;
-            border: 1px solid #22253b;
-            width: 100%;
-            max-width: 400px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-        }
-
-        @media (min-width: 480px) {
-            .auth-card {
-                padding: 36px;
-            }
-            header {
-                padding: 18px 40px;
-                justify-content: flex-start;
-            }
-        }
-
-        .auth-card h2 {
-            font-size: 22px;
-            color: #ffffff;
-            margin-bottom: 8px;
-            text-align: center;
-        }
-
-        .subtitle {
-            font-size: 13px;
-            color: #6b7280;
-            text-align: center;
-            margin-bottom: 24px;
-        }
-
-        .social-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .btn-social {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            width: 100%;
-            padding: 12px 10px;
-            background-color: #1e2133;
-            border: 1px solid #2d324d;
-            border-radius: 6px;
-            color: #ffffff;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-
-        .btn-social:hover {
-            background-color: #272b42;
-        }
-
-        .btn-social svg {
-            width: 18px;
-            height: 18px;
-            fill: currentColor;
-        }
-
-        .divider {
-            display: flex;
-            align-items: center;
-            text-align: center;
-            margin: 20px 0;
-            color: #63697b;
+        .login-subtitle {
             font-size: 12px;
+            color: #8a8f9e;
+            text-transform: uppercase;
+            margin-bottom: 25px;
+            letter-spacing: 0.5px;
         }
 
-        .divider::before, .divider::after {
-            content: '';
-            flex: 1;
-            border-bottom: 1px solid #22253b;
-        }
-
-        .divider span {
-            padding: 0 10px;
-        }
-
-        .input-group {
-            margin-bottom: 16px;
-        }
-
-        .input-group label {
-            display: block;
-            font-size: 13px;
-            color: #8b92a8;
-            margin-bottom: 6px;
-        }
-
-        .input-group input {
-            width: 100%;
-            padding: 12px;
-            background-color: #0b0c13;
-            border: 1px solid #22253b;
-            border-radius: 6px;
-            color: #ffffff;
-            font-size: 14px;
-        }
-
-        .input-group input:focus {
-            outline: none;
-            border-color: #4f46e5;
-        }
-
-        .btn-submit {
-            width: 100%;
-            padding: 12px;
-            background-color: #4f46e5;
-            color: #ffffff;
+        .btn-google {
+            background-color: #ffffff;
+            color: #12141c;
             border: none;
+            width: 100%;
+            padding: 12px;
             border-radius: 6px;
-            font-size: 14px;
-            font-weight: 600;
+            font-weight: 700;
+            font-size: 13px;
             cursor: pointer;
-            transition: background-color 0.2s;
-            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: background-color 0.2s, box-shadow 0.2s;
+            text-transform: uppercase;
         }
 
-        .btn-submit:hover {
-            background-color: #4338ca;
+        .btn-google:hover {
+            background-color: #00f0ff;
+            box-shadow: 0 0 12px rgba(0, 240, 255, 0.4);
         }
 
-        .toggle-view {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 13px;
-            color: #6b7280;
+        #toastContainer {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 2000;
         }
 
-        .toggle-view a {
-            color: #60a5fa;
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        .status-message {
-            margin-top: 16px;
-            padding: 10px;
-            border-radius: 6px;
-            font-size: 13px;
-            display: none;
-            text-align: center;
-        }
-
-        .status-message.error {
-            background-color: rgba(220, 38, 38, 0.15);
-            color: #fca5a5;
-            border: 1px solid rgba(220, 38, 38, 0.3);
-        }
-
-        .status-message.success {
-            background-color: rgba(16, 185, 129, 0.15);
-            color: #6ee7b7;
-            border: 1px solid rgba(16, 185, 129, 0.3);
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        footer {
-            text-align: center;
-            padding: 15px;
-            background-color: #13141f;
-            color: #63697b;
+        .toast {
+            background-color: #ff007f;
+            color: #ffffff;
+            padding: 10px 16px;
+            border-radius: 4px;
             font-size: 12px;
-            border-top: 1px solid #222538;
+            font-weight: 700;
+            box-shadow: 0 0 12px rgba(255, 0, 127, 0.6);
+            margin-top: 5px;
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="logo">🎮 GamerBlogsVerse</div>
-    </header>
+    <div class="login-container">
+        <div class="logo">GamerBlogsVerse</div>
+        <div class="login-subtitle">Accede con tu cuenta oficial</div>
+        
+        <!-- Botón de Inicio de Sesión con Google -->
+        <button class="btn-google" onclick="loginConGoogle()">
+            <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#12141c" d="M12 5c1.6 0 3 .6 4.1 1.6l3.1-3.1C17.3 1.8 14.8 1 12 1 7.4 1 3.5 3.6 1.6 7.4l3.7 2.9C6.2 7.1 8.9 5 12 5z"/><path fill="#12141c" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.8z"/><path fill="#12141c" d="M5.3 14.7c-.2-.7-.4-1.5-.4-2.3s.2-1.6.4-2.3L1.6 7.2C.6 9.2 0 11.5 0 14s.6 4.8 1.6 6.8l3.7-2.9z"/><path fill="#12141c" d="M12 23c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3.1 0-5.8-2.1-6.7-5.1L1.6 16C3.5 19.8 7.4 23 12 23z"/></svg>
+            Continuar con Google
+        </button>
+    </div>
 
-    <main>
-        <div class="auth-card">
-            
-            <div id="loginSection">
-                <h2>Iniciar Sesión</h2>
-                <p class="subtitle">Accede a tu cuenta para continuar</p>
-
-                <div class="social-buttons">
-                    <button class="btn-social" onclick="loginConProveedor('Google')">
-                        <svg viewBox="0 0 24 24"><path d="M12.545,10.239v3.821h5.445c-0.712,2.315-2.647,3.972-5.445,3.972c-3.332,0-6.033-2.701-6.033-6.032s2.701-6.032,6.033-6.032c1.498,0,2.866,0.549,3.921,1.453l2.814-2.814C17.503,2.988,15.139,2,12.545,2C7.021,2,2.543,6.477,2.543,12s4.478,10,10.002,10c8.396,0,10.249-7.85,9.426-11.761H12.545z"/></svg>
-                        Continuar con Google
-                    </button>
-                    <button class="btn-social" onclick="loginConProveedor('Apple')">
-                        <svg viewBox="0 0 24 24"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.85c.62-.77 1.05-1.83.93-2.91-.91.04-2.04.61-2.69 1.37-.58.67-1.09 1.76-.95 2.82 1.03.08 2.09-.51 2.71-1.28z"/></svg>
-                        Continuar con Apple
-                    </button>
-                    <button class="btn-social" onclick="loginConProveedor('Facebook')">
-                        <svg viewBox="0 0 24 24"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H7.5v-3H10V9.5C10 7.01 11.49 5.6 13.78 5.6c1.1 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.77l-.44 3h-2.33v6.8c4.56-.93 8-4.96 8-9.8z"/></svg>
-                        Continuar con Facebook
-                    </button>
-                </div>
-
-                <div class="divider">
-                    <span>o entra con tu correo</span>
-                </div>
-
-                <form id="loginForm" onsubmit="validarLogin(event)">
-                    <div class="input-group">
-                        <label for="loginEmail">Correo electrónico</label>
-                        <input type="email" id="loginEmail" required placeholder="tu@email.com">
-                    </div>
-                    <div class="input-group">
-                        <label for="loginPassword">Contraseña</label>
-                        <input type="password" id="loginPassword" required placeholder="••••••••">
-                    </div>
-                    <button type="submit" class="btn-submit">Ingresar</button>
-                </form>
-
-                <div class="toggle-view">
-                    ¿No tienes cuenta? <a href="#" onclick="cambiarVista('register')">Crear cuenta</a>
-                </div>
-            </div>
-
-            <div id="registerSection" class="hidden">
-                <h2>Crear Cuenta</h2>
-                <p class="subtitle">Únete a GamerBlogsVerse</p>
-
-                <form id="registerForm" onsubmit="registrarUsuario(event)">
-                    <div class="input-group">
-                        <label for="regName">Nombre / Gamertag</label>
-                        <input type="text" id="regName" required placeholder="Ej: Mateo Aldana">
-                    </div>
-                    <div class="input-group">
-                        <label for="regEmail">Correo electrónico</label>
-                        <input type="email" id="regEmail" required placeholder="tu@email.com">
-                    </div>
-                    <div class="input-group">
-                        <label for="regPassword">Contraseña</label>
-                        <input type="password" id="regPassword" required placeholder="••••••••">
-                    </div>
-                    <button type="submit" class="btn-submit">Registrarse</button>
-                </form>
-
-                <div class="toggle-view">
-                    ¿Ya tienes cuenta? <a href="#" onclick="cambiarVista('login')">Iniciar sesión</a>
-                </div>
-            </div>
-
-            <div id="statusMessage" class="status-message"></div>
-        </div>
-    </main>
-
-    <footer>
-        <p>&copy; 2026 GamerBlogsVerse. Todos los derechos reservados.</p>
-    </footer>
+    <div id="toastContainer"></div>
 
     <script>
-        let usuariosDB = JSON.parse(localStorage.getItem('usuariosGamerVerse')) || {};
+        // CONFIGURACIÓN DE FIREBASE (Reemplaza con tus credenciales de la consola de Firebase)
+        const firebaseConfig = {
+            apiKey: "AIzaSyAn3OccYdLdKnaOU3MKCbxx0gw5oS1is7w",
+            authDomain: "gamerblogverse.firebaseapp.com",
+            projectId: "gamerblogverse",
+            storageBucket: "gamerblogverse.firebasestorage.app",
+            messagingSenderId: "407420759929",
+            appId: "1:407420759929:web:85554efffdd87f786c09a8"
+        };
 
-        function mostrarMensaje(texto, esError) {
-            const statusDiv = document.getElementById('statusMessage');
-            statusDiv.textContent = texto;
-            statusDiv.className = 'status-message ' + (esError ? 'error' : 'success');
-            statusDiv.style.display = 'block';
+        // Inicializar Firebase
+        firebase.initializeApp(firebaseConfig);
+
+        function mostrarToast(msg) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = msg;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
         }
 
-        function cambiarVista(vista) {
-            document.getElementById('statusMessage').style.display = 'none';
-            if (vista === 'register') {
-                document.getElementById('loginSection').classList.add('hidden');
-                document.getElementById('registerSection').classList.remove('hidden');
-            } else {
-                document.getElementById('registerSection').classList.add('hidden');
-                document.getElementById('loginSection').classList.remove('hidden');
-            }
-        }
-
-        function validarLogin(event) {
-            event.preventDefault();
-            const email = document.getElementById('loginEmail').value.toLowerCase();
-
-            if (usuariosDB[email]) {
-                const nombreUsuario = usuariosDB[email];
-                localStorage.setItem('usuarioActivoNombre', nombreUsuario);
-                
-                mostrarMensaje(`¡Bienvenido, ${nombreUsuario}! Redirigiendo...`, false);
-                setTimeout(() => {
-                    window.location.href = "dashboard.html";
-                }, 1000);
-            } else {
-                mostrarMensaje("Esta cuenta no existe. Crea una en 'Crear cuenta'.", true);
-            }
-        }
-
-        function registrarUsuario(event) {
-            event.preventDefault();
-            const nombre = document.getElementById('regName').value;
-            const email = document.getElementById('regEmail').value.toLowerCase();
-
-            if (usuariosDB[email]) {
-                mostrarMensaje("Este correo ya está registrado.", true);
-            } else {
-                usuariosDB[email] = nombre;
-                localStorage.setItem('usuariosGamerVerse', JSON.stringify(usuariosDB));
-                localStorage.setItem('usuarioActivoNombre', nombre);
-                
-                mostrarMensaje(`¡Cuenta creada para ${nombre}! Inicia sesión.`, false);
-                setTimeout(() => { cambiarVista('login'); }, 1500);
-            }
-        }
-
-        function loginConProveedor(proveedor) {
-            const emailSocial = prompt(`Ingresa tu correo para continuar con ${proveedor}:`);
-            if (emailSocial) {
-                const cleanEmail = emailSocial.toLowerCase();
-                if (usuariosDB[cleanEmail]) {
-                    const nombreUsuario = usuariosDB[cleanEmail];
-                    localStorage.setItem('usuarioActivoNombre', nombreUsuario);
-                    mostrarMensaje(`Acceso concedido. Redirigiendo...`, false);
-                    setTimeout(() => { window.location.href = "dashboard.html"; }, 1000);
-                } else {
-                    mostrarMensaje(`No existe cuenta para ${emailSocial}. Crea una cuenta primero.`, true);
-                }
-            }
+        // Función para autenticar con Google
+        function loginConGoogle() {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            firebase.auth().signInWithPopup(provider)
+                .then((result) => {
+                    const user = result.user;
+                    // Guardar nombre del usuario autenticado en localStorage
+                    localStorage.setItem('usuarioActivoNombre', user.displayName || 'Gamer Google');
+                    mostrarToast("¡Autenticación exitosa! Redirigindo...");
+                    setTimeout(() => {
+                        window.location.href = "dashboard.html";
+                    }, 1000);
+                })
+                .catch((error) => {
+                    console.error("Error en el login:", error.message);
+                    mostrarToast("Error al iniciar sesión con Google.");
+                });
         }
     </script>
 </body>
